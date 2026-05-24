@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+*.spec
+
+# Runtime data (user videos and analysis output)
+upload/*
+!upload/.gitkeep
+output/*
+!output/.gitkeep
+!output/clips/
+output/clips/*
+!output/clips/.gitkeep
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
