@@ -13,12 +13,40 @@ from detector import analyze_video, clips_folder_for_video
 from report_pdf import generate_analysis_pdf
 
 
-if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-    RESOURCE_DIR = Path(sys._MEIPASS)
-    RUNTIME_DIR = Path(sys.executable).resolve().parent
-else:
-    RESOURCE_DIR = Path(__file__).resolve().parent
-    RUNTIME_DIR = RESOURCE_DIR
+def _resolve_dirs() -> tuple[Path, Path]:
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS), Path(sys.executable).resolve().parent
+    base = Path(__file__).resolve().parent
+    return base, base
+
+
+def _require_resource_dirs(resource_dir: Path, runtime_dir: Path) -> None:
+    missing = [name for name in ("templates", "static") if not (resource_dir / name).is_dir()]
+    if not missing:
+        return
+    lines = [
+        "Die Ordner 'templates' und 'static' sind fuer den Start erforderlich, wurden aber nicht gefunden.",
+        "",
+        f"Projektordner: {runtime_dir}",
+        f"Ressourcenpfad: {resource_dir}",
+    ]
+    for name in missing:
+        lines.append(f"  - fehlt: {name}/  (erwartet: {resource_dir / name})")
+    lines.extend(
+        [
+            "",
+            "Bitte das komplette Repository klonen oder als ZIP entpacken — nicht nur einzelne .py-Dateien.",
+            "Start immer aus dem Projektordner:",
+            "  Windows: start_app.bat",
+            "  macOS:   ./start_app.sh",
+            "  manuell: python launcher.py",
+        ]
+    )
+    raise RuntimeError("\n".join(lines))
+
+
+RESOURCE_DIR, RUNTIME_DIR = _resolve_dirs()
+_require_resource_dirs(RESOURCE_DIR, RUNTIME_DIR)
 UPLOAD_DIR = RUNTIME_DIR / "upload"
 OUTPUT_DIR = RUNTIME_DIR / "output"
 RESULTS_FILE = OUTPUT_DIR / "last_result.json"

@@ -2,6 +2,17 @@
 setlocal
 cd /d "%~dp0"
 
+if not exist "templates\" (
+  echo [FEHLER] Ordner templates\ fehlt.
+  pause
+  exit /b 1
+)
+if not exist "static\" (
+  echo [FEHLER] Ordner static\ fehlt.
+  pause
+  exit /b 1
+)
+
 if not exist ".venv\Scripts\python.exe" (
   echo [INFO] Erstelle virtuelle Umgebung...
   py -m venv .venv

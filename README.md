@@ -32,6 +32,32 @@ Im Browser oeffnen: [http://127.0.0.1:5050](http://127.0.0.1:5050)
 
 `start_app.bat` legt bei Bedarf eine virtuelle Umgebung an, installiert Abhaengigkeiten und startet die App inkl. Browser.
 
+### macOS
+
+Im Terminal im Projektordner:
+
+```bash
+chmod +x start_app.sh build_mac.sh
+./start_app.sh
+```
+
+Optional eine eigenstaendige App bauen:
+
+```bash
+./build_mac.sh
+```
+
+Die App liegt danach unter `dist/Durchfluganalyse.app`.
+
+## Fehlerbehebung: „templates/static nicht verfuegbar“
+
+Dieser Fehler tritt auf, wenn **nicht das komplette Projekt** vorliegt (z. B. nur `app.py` kopiert) oder der Start aus einem falschen Ordner erfolgt.
+
+1. Repository vollstaendig klonen oder ZIP entpacken — es muessen u. a. `templates/` und `static/` neben `app.py` liegen.
+2. Pruefung: `python check_setup.py` (meldet fehlende Ordner/Dateien).
+3. Start nur ueber `start_app.bat`, `./start_app.sh` oder `python launcher.py` **im Projektordner**.
+4. Bei einer selbst gebauten EXE/App: neu bauen mit `build_exe.bat` (Windows) bzw. `build_mac.sh` (macOS).
+
 ## Nutzung
 
 1. Video-Dateien (z. B. `.mp4`, `.mov`, `.mkv`) in den Ordner `upload/` kopieren.
@@ -55,13 +81,12 @@ Im Dashboard koennen u. a. angepasst werden:
 
 Die Standardwerte sind konservativ gewaehlt, um Fehlalarme zu reduzieren.
 
-## Optional: EXE bauen (Windows)
+## Optional: Standalone-Build
 
-```bat
-build_exe.bat
-```
-
-Die fertige Datei liegt unter `dist\VideoanalyseStarter\VideoanalyseStarter.exe`.
+| Plattform | Skript | Ergebnis |
+|-----------|--------|----------|
+| Windows | `build_exe.bat` | `dist\VideoanalyseStarter\VideoanalyseStarter.exe` |
+| macOS | `build_mac.sh` | `dist/Durchfluganalyse.app` |
 
 ## Projektstruktur
 
@@ -71,6 +96,9 @@ Die fertige Datei liegt unter `dist\VideoanalyseStarter\VideoanalyseStarter.exe`
 ├── detector.py         # Videoanalyse und Clip-Export
 ├── report_pdf.py       # PDF-Berichtserstellung
 ├── launcher.py         # Start mit automatischem Browser
+├── start_app.bat       # Windows-Starter
+├── start_app.sh        # macOS-Starter
+├── check_setup.py      # Prueft vollstaendige Installation
 ├── requirements.txt
 ├── static/             # Frontend (CSS, JS)
 ├── templates/          # HTML-Dashboard

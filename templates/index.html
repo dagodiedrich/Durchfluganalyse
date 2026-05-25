@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Durchfluganalyse</title>
+  <style>body{background:#0b1220;color:#e6edf7}</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css?v=10">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="left-panel">
+      <div class="brand">
+        <div class="logo">DA</div>
+        <div>
+          <h1>Durchfluganalyse</h1>
+          <p class="sub">Praezise Erkennung von Durchfluegen und Tier-Erscheinungen inklusive Clip-Export.</p>
+        </div>
+      </div>
+      <p class="hint">Video-Dateien bitte in den Ordner <code id="upload-dir">upload/</code> kopieren.</p>
+
+      <form id="analyze-form">
+        <div class="row">
+          <label>Videos aus Upload-Ordner (Mehrfachauswahl)</label>
+          <div class="video-select-actions">
+            <button type="button" class="btn-link" id="selectAllVideos">Alle</button>
+            <button type="button" class="btn-link" id="selectNoVideos">Keine</button>
+          </div>
+          <div id="videoCheckboxList" class="video-checkbox-list">
+            <p class="empty">Keine Videos im upload-Ordner.</p>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn-secondary" id="refreshBtn">Aktualisieren</button>
+          <button type="submit" class="btn-primary" id="analyzeBtn">Analyse starten</button>
+        </div>
+
+        <h2>Filterparameter (konservativ)</h2>
+        <div class="row"><label for="minArea">Min. Objektflaeche</label><input id="minArea" type="number" name="minArea" value="70" min="10" step="5"></div>
+        <div class="row"><label for="maxArea">Max. Objektflaeche</label><input id="maxArea" type="number" name="maxArea" value="22000" min="100" step="100"></div>
+        <div class="row"><label for="minSpeed">Min. Geschwindigkeit (px/s)</label><input id="minSpeed" type="number" name="minSpeed" value="22" min="1" step="1"></div>
+        <div class="row"><label for="minDisplacement">Min. Gesamtweg (px)</label><input id="minDisplacement" type="number" name="minDisplacement" value="180" min="1" step="1"></div>
+        <div class="row"><label for="maxDuration">Max. Event-Dauer (s)</label><input id="maxDuration" type="number" name="maxDuration" value="2.2" min="0.5" max="30" step="0.1"></div>
+        <div class="row"><label for="clipPadding">Clip Vor-/Nachlauf (s)</label><input id="clipPadding" type="number" name="clipPadding" value="0.6" min="0" max="6" step="0.2"></div>
+      </form>
+    </aside>
+
+    <section class="main-panel">
+      <div class="status-card">
+        <div id="statusBox" class="status">Bereit fuer Analyse.</div>
+        <div class="progress-wrap">
+          <div class="progress-head">
+            <span id="liveText">Kein Job aktiv</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div><span>Erkannte Events</span><strong id="total-passes">0</strong></div>
+        <div><span>Video-Laenge</span><strong id="duration">-</strong></div>
+        <div><span>FPS</span><strong id="fps">-</strong></div>
+        <div><span>Analysezeit</span><strong id="processing">-</strong></div>
+      </div>
+
+      <p id="debug-info" class="hint"></p>
+
+      <section class="table-card">
+        <h2>Erkannte Durchfluege und Tier-Erscheinungen</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Typ</th>
+                <th>Start (s)</th>
+                <th>Ende (s)</th>
+                <th>Dauer (s)</th>
+                <th>Clip</th>
+              </tr>
+            </thead>
+            <tbody id="result-body">
+              <tr><td colspan="6" class="empty">Noch keine Analyse ausgefuehrt.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="table-card tall-card">
+          <h2>Quellordner Videos</h2>
+          <p id="upload-path-view" class="path-view">upload/</p>
+          <ul id="video-list" class="file-list">
+            <li class="empty">Keine Videos geladen.</li>
+          </ul>
+        </article>
+
+        <article class="table-card tall-card">
+          <h2>Exportierte Clips und PDFs</h2>
+          <p id="clips-dir-view" class="path-view">output/clips/Analyseclips_&lt;Video&gt;/</p>
+          <ul id="clip-list" class="file-list">
+            <li class="empty">Noch keine Clips vorhanden.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="table-card viewer-card">
+        <h2>Clip Viewer</h2>
+        <p id="viewer-hint" class="hint">Klicke in der Ergebnisliste auf "Clip", um die Vorschau direkt hier zu laden.</p>
+        <video id="preview" class="preview" controls playsinline></video>
+      </section>
+    </section>
+  </main>
+  <script src="/static/app.js?v=10"></script>
+</body>
+</html>

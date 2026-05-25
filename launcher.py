@@ -1,10 +1,18 @@
 from __future__ import annotations
 
+import os
+import sys
 import threading
 import time
 import webbrowser
+from pathlib import Path
 
-from app import app
+ROOT = Path(__file__).resolve().parent
+os.chdir(ROOT)
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app import app  # noqa: E402
 
 
 HOST = "127.0.0.1"
@@ -13,7 +21,6 @@ URL = f"http://{HOST}:{PORT}"
 
 
 def _open_browser_when_ready() -> None:
-    # Give Flask a short head start, then open UI.
     time.sleep(1.2)
     webbrowser.open_new(URL)
 
